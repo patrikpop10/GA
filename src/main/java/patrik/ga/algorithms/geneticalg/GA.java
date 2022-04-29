@@ -63,10 +63,9 @@ public class GA implements IAlgorithms {
                     Solution dad = pop.selection();
                     Solution mom = pop.selection();
 
-                    Solution child1 = new Solution(dad.getWidth(), dad.getHeight(), new ArrayList<Color>());
-                    Solution child2 = new Solution(dad.getWidth(), dad.getHeight(), new ArrayList<Color>());
+                    Solution child1 = new Solution(dad.getWidth(), dad.getHeight());
+                    Solution child2 = new Solution(dad.getWidth(), dad.getHeight());
 
-                    currentNumberOfIndividuals = elitism(pop, newPop, currentNumberOfIndividuals);
 
                     if (Math.random() < Parameters.crossoverRate) {
                         crossover(dad, mom, child1, child2);
@@ -90,40 +89,35 @@ public class GA implements IAlgorithms {
             pop = newPop;
             best = pop.bestOfPop();
             BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
+            if(gen % 100 == 0){
+                int[] arr = best.getColors().stream().mapToInt(i -> i.getRGB()).toArray();
+                bufferedImage.setRGB(0,0,(int) best.getWidth(),(int) best.getHeight(), arr, 0,(int) best.getWidth());
+                MainController.context.drawImage(SwingFXUtils.toFXImage(bufferedImage,null), 0, 0);
+                System.out.print(gen+1 +".   " + best.calculateFitness());
+                System.out.println();
+            }
 
-            int[] arr = best.getColors().stream().mapToInt(i -> i.getRGB()).toArray();
-            bufferedImage.setRGB(0,0,(int) best.getWidth(),(int) best.getHeight(), arr, 0,(int) best.getWidth());
-            MainController.context.drawImage(SwingFXUtils.toFXImage(bufferedImage,null), 0, 0);
-            Thread.sleep(300);
-            System.out.print(gen+1 +".   " + best.calculateFitness());
-            System.out.println();
+
         }
 
 
 
     }  // terminates the main method
 
-    private int elitism(Population pop, Population newPop, int currentNumberOfIndividuals) {
-        newPop.individuals[currentNumberOfIndividuals] = pop.bestOfPop().myClone();
-        currentNumberOfIndividuals++;
-        return currentNumberOfIndividuals;
-    }
-
     //crossover
 
     private static void crossover(Solution father, Solution mother, Solution child1, Solution child2){
 
-        int randomIndex = (int) (Math.random() *(Parameters.BaseImage.getColors().size() -1));
+        int randomIndex = (int) (Math.random() *(Parameters.numberOfCircles -1));
 
         for (int i = 0; i <=randomIndex ; i++) {
-            child1.getColors().add(i, father.getColors().get(i));
-            child2.getColors().add(i, mother.getColors().get(i));
-
+            child1.getShapes().set(i,father.getShapes().get(i));
+            child2.getShapes().set(i,mother.getShapes().get(i));
         }
 
-        for (int i = randomIndex+1; i < Parameters.BaseImage.getColors().size()  ; i++) {
-            child1.getColors().add(i, mother.getColors().get(i));
-            child2.getColors().add(i, father.getColors().get(i));
+        for (int i = randomIndex+1; i < mother.getShapes().size()  ; i++) {
+            child1.getShapes().set(i,mother.getShapes().get(i));
+            child2.getShapes().set(i,father.getShapes().get(i));
         }
 
     }

@@ -5,9 +5,13 @@ import patrik.ga.Parameters;
 import patrik.ga.algorithms.interfaces.ISolution;
 import patrik.ga.util.image.Colors;
 import patrik.ga.util.image.Image;
+import patrik.ga.util.image.ImageUtils;
+import patrik.ga.util.image.Shape;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Solution extends Image implements ISolution {
 
@@ -29,9 +33,6 @@ public class Solution extends Image implements ISolution {
 	}
 	Solution(double width, double height) {
 		super(width, height);
-		for(int i = 0; i < Parameters.BaseImage.getColors().size(); i++){
-			this.getColors().add(i, new Color((int)(Math.random() * 0x1000000)));
-		}
 
 		alreadyCalculated = false;
 		fitness = -1;
@@ -70,9 +71,12 @@ public class Solution extends Image implements ISolution {
 
 	public Solution myClone() {
 
-		Solution s = new Solution(super.getWidth(), super.getHeight(), super.getColors());
+		Solution s = new Solution(super.getWidth(), super.getHeight());
 		s.alreadyCalculated = this.alreadyCalculated;
 		s.fitness = this.fitness;
+		s.setImg(this.getImg());
+		s.setColors(this.getColors());
+		s.setShapes(this.getShapes());
 		return s;
 
 	} //ends method myClone
@@ -90,16 +94,25 @@ public class Solution extends Image implements ISolution {
 	public Solution mutation() {
 
 		Solution s = new Solution(super.getWidth(), super.getHeight());
-		for(int i = 0; i < super.getColors().size();i++) {
-			if (Math.random() < Parameters.mutationRate)
-				s.getColors().set(i, new Color((int) (Math.random() * 0x1000000)));
-			else {
-				s.getColors().set(i,this.getColors().get(i));
+		for(int i = 0; i < super.getShapes().size();i++) {
+			if (Math.random() < Parameters.mutationRate) {
+				s.getShapes().set(i, new Shape(new Random().nextInt(0, Parameters.imageSize),
+						new Random().nextInt(0, Parameters.imageSize),
+						new Random().nextInt(0, Parameters.imageSize),
+						new Random().nextInt(0, Parameters.imageSize),
+						new Random().nextInt(0, Parameters.imageSize),
+						new Random().nextInt(0, Parameters.imageSize),
+						new Color((int) (Math.random() * 0x1000000))));
 
 			}
+			else {
+				s.getShapes().set(i,this.getShapes().get(i));
+
+			}
+
 		}// ends the for
-
-
+		s.draw();
+		s.setColors(ImageUtils.getColorsList(s.getImg(), Parameters.imageSize, Parameters.imageSize));
 		s.alreadyCalculated = false;
 		s.fitness = -1;
 		return s;
@@ -141,11 +154,25 @@ public class Solution extends Image implements ISolution {
 
 			double res= 0.0;
 			ArrayList<Double> values = new ArrayList<>();
-			for (int i = 0; i< this.getColors().size(); i++) {
-				values.add(calcPixelDistance(i));
+			try{
+				IntStream.range(0, this.getColors().size())
+						.parallel()
+						.forEach(i -> {
+							values.add(calcPixelDistance(i));
+						});
+				res = values.stream().mapToDouble(i -> i.doubleValue()).sum();
+			}
+			catch (Exception e){
+				e.printStackTrace();
 			}
 
-			res = values.stream().mapToInt(i -> i.intValue()).sum();
+			/*
+				for (int i = 0; i< this.getColors().size(); i++) {
+				values.add(calcPixelDistance(i));
+			}
+			 */
+
+
 
 			alreadyCalculated = true;
 			fitness = res;
@@ -154,6 +181,8 @@ public class Solution extends Image implements ISolution {
 		return fitness;
 
 	} // terminates calculateFitness method
+
+
 	private double calcSpecificColorDif(Image baseImage, Colors color, int index){
 		switch (color){
 			case Red -> {

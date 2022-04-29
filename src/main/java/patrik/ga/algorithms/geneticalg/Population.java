@@ -35,7 +35,7 @@ public class Population {
 
     public Solution selection(){
 
-        return proportionalSelection();
+        return tournamentSelection();
     }
 
 

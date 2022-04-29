@@ -138,7 +138,7 @@ public class MainController {
             if(file != null){
                 file.setReadable(true);
 
-                wi = new WritableImage(300, 300);
+                wi = new WritableImage(Parameters.imageSize, Parameters.imageSize);
                 try {
                     wi = new WritableImage(new Image(new FileInputStream(file)).getPixelReader(), 500, 500);
                 } catch (FileNotFoundException e) {
@@ -149,7 +149,7 @@ public class MainController {
 
                ImageBuilder reader = new ImageBuilder(file);
 
-               patrik.ga.util.image.Image image = reader.BuildImageFromFile(300, 300);
+               patrik.ga.util.image.Image image = reader.BuildImageFromFile(Parameters.imageSize, Parameters.imageSize);
                Parameters.BaseImage = image;
             }
         });
