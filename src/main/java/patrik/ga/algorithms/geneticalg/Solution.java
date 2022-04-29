@@ -8,6 +8,10 @@ import patrik.ga.util.image.Image;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
+import java.util.stream.IntStream;
 
 public class Solution extends Image implements ISolution {
 
@@ -138,15 +142,22 @@ public class Solution extends Image implements ISolution {
 
 	public double calculateFitness() {
 		if(!alreadyCalculated) {
-
 			double res= 0.0;
-			ArrayList<Double> values = new ArrayList<>();
+			try{
+				var time = System.currentTimeMillis();
+				ArrayList<Double> values = new ArrayList<Double>();
+
+
 			for (int i = 0; i< this.getColors().size(); i++) {
 				values.add(calcPixelDistance(i));
 			}
+				res = values.stream().mapToDouble(i -> i.doubleValue()).sum();
 
-			res = values.stream().mapToInt(i -> i.intValue()).sum();
 
+			}
+			catch(Exception e ){
+				e.printStackTrace();
+			}
 			alreadyCalculated = true;
 			fitness = res;
 		}

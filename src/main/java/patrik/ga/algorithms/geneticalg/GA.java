@@ -31,7 +31,8 @@ public class GA implements IAlgorithms {
         Population pop = new Population();
         Solution best = pop.bestOfPop();
         System.out.print("1.       ");
-
+        //int gen = 1;
+        //while (true){
         for (int gen = 1; gen < Parameters.maxNumberOfGenerations; gen++) {
 
             Population newPop = new Population();
@@ -66,8 +67,6 @@ public class GA implements IAlgorithms {
                     Solution child1 = new Solution(dad.getWidth(), dad.getHeight(), new ArrayList<Color>());
                     Solution child2 = new Solution(dad.getWidth(), dad.getHeight(), new ArrayList<Color>());
 
-                    currentNumberOfIndividuals = elitism(pop, newPop, currentNumberOfIndividuals);
-
                     if (Math.random() < Parameters.crossoverRate) {
                         crossover(dad, mom, child1, child2);
                     }else {
@@ -89,25 +88,29 @@ public class GA implements IAlgorithms {
             }//ends for
             pop = newPop;
             best = pop.bestOfPop();
-            BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
 
-            int[] arr = best.getColors().stream().mapToInt(i -> i.getRGB()).toArray();
-            bufferedImage.setRGB(0,0,(int) best.getWidth(),(int) best.getHeight(), arr, 0,(int) best.getWidth());
-            MainController.context.drawImage(SwingFXUtils.toFXImage(bufferedImage,null), 0, 0);
-            Thread.sleep(300);
+            if(gen % 100 == 0 || gen == 1){
+
+                System.out.println("Changing Image");
+                Thread.sleep(1500);
+                BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
+                int[] arr = best.getColors().stream().mapToInt(i -> i.getRGB()).toArray();
+                bufferedImage.setRGB(0,0,(int) best.getWidth(),(int) best.getHeight(), arr, 0,(int) best.getWidth());
+                MainController.context.drawImage(SwingFXUtils.toFXImage(bufferedImage,null), 0, 0);
+
+            }
+
+
             System.out.print(gen+1 +".   " + best.calculateFitness());
             System.out.println();
+            //gen++;
         }
 
 
 
     }  // terminates the main method
 
-    private int elitism(Population pop, Population newPop, int currentNumberOfIndividuals) {
-        newPop.individuals[currentNumberOfIndividuals] = pop.bestOfPop().myClone();
-        currentNumberOfIndividuals++;
-        return currentNumberOfIndividuals;
-    }
+
 
     //crossover
 
