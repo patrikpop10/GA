@@ -10,6 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="openjfx.javafx.swing" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:18.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:18.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-graphics:18.0.1" level="project" />
@@ -46,6 +47,6 @@
     <orderEntry type="library" name="Maven: com.dorkbox:TweenEngine:8.3" level="project" />
     <orderEntry type="library" name="Maven: com.dorkbox:ObjectPool:2.11" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:slf4j-api:1.7.9" level="project" />
-    <orderEntry type="library" name="openjfx.javafx.swing" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />
   </component>
 </module>

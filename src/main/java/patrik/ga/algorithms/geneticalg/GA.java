@@ -1,5 +1,8 @@
 package patrik.ga.algorithms.geneticalg;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.*;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
@@ -8,9 +11,9 @@ import patrik.ga.algorithms.interfaces.IAlgorithms;
 import patrik.ga.controllers.MainController;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GA implements IAlgorithms {
     /*---------------------------------------------------------------
@@ -56,12 +59,15 @@ public class GA implements IAlgorithms {
 
 
 
-                }//ends inizialitation
+                }//ends initizialition
 
                 else {
 
+
                     Solution dad = pop.selection();
+                    pop.individuals = ArrayUtils.removeElement(pop.individuals,dad);
                     Solution mom = pop.selection();
+                    pop.individuals = ArrayUtils.removeElement(pop.individuals, mom);
 
                     Solution child1 = new Solution(dad.getWidth(), dad.getHeight());
                     Solution child2 = new Solution(dad.getWidth(), dad.getHeight());
@@ -88,15 +94,15 @@ public class GA implements IAlgorithms {
             }//ends for
             pop = newPop;
             best = pop.bestOfPop();
-            BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
-            if(gen % 100 == 0){
+
+            if(gen % 100 == 0 || gen == 1){
+                BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
                 int[] arr = best.getColors().stream().mapToInt(i -> i.getRGB()).toArray();
                 bufferedImage.setRGB(0,0,(int) best.getWidth(),(int) best.getHeight(), arr, 0,(int) best.getWidth());
                 MainController.context.drawImage(SwingFXUtils.toFXImage(bufferedImage,null), 0, 0);
-                System.out.print(gen+1 +".   " + best.calculateFitness());
-                System.out.println();
             }
-
+            System.out.print(gen+1 +".   " + best.calculateFitness());
+            System.out.println();
 
         }
 
@@ -105,20 +111,36 @@ public class GA implements IAlgorithms {
     }  // terminates the main method
 
     //crossover
+    //TODO: CHANGE FOR A MORE RANDOM APPROACH
 
     private static void crossover(Solution father, Solution mother, Solution child1, Solution child2){
+        var genePool =  Stream.concat(father.getShapes().stream(), mother.getShapes().stream()).collect(Collectors.toList());
+        Collections.shuffle(genePool);
+        var childOneGenes = new ArrayList<patrik.ga.util.image.Shape>();
+        var childTwoGenes = new ArrayList<patrik.ga.util.image.Shape>();
+        int randomIndex = (int) (new Random().nextDouble(0,1) *(genePool.size() -1));
 
-        int randomIndex = (int) (Math.random() *(Parameters.numberOfCircles -1));
+       while(randomIndex == 0 )
+       {
 
+           randomIndex = (int) (new Random().nextDouble(0.1,1) *(genePool.size() -1));
+       }
         for (int i = 0; i <=randomIndex ; i++) {
-            child1.getShapes().set(i,father.getShapes().get(i));
-            child2.getShapes().set(i,mother.getShapes().get(i));
+
+           childOneGenes.add(genePool.get(i));
+
         }
 
-        for (int i = randomIndex+1; i < mother.getShapes().size()  ; i++) {
-            child1.getShapes().set(i,mother.getShapes().get(i));
-            child2.getShapes().set(i,father.getShapes().get(i));
+        for (int i = randomIndex+1; i < genePool.size()  ; i++) {
+            childTwoGenes.add(genePool.get(i));
+
         }
+        if(childOneGenes.size() == 0 || childTwoGenes.size() == 0)
+        {
+            System.out.println("here");
+        }
+        child1.setShapes(childOneGenes);
+        child2.setShapes(childTwoGenes);
 
     }
 

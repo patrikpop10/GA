@@ -29,7 +29,6 @@ public class Population {
 
 
 
-
     // selection
 
 
@@ -61,15 +60,18 @@ public class Population {
         for (var sol: this.individuals) {
             total += sol.calculateFitness();
         }
-        double rand = new Random().nextDouble(0, total);
-        double partialSum = 0.0;
-        for(var sol : this.individuals){
-            partialSum += sol.calculateFitness();
-            if(partialSum <= rand){
-                return sol;
+        while(true)
+        {
+            double rand = new Random().nextDouble(0, total);
+            double partialSum = 0.0;
+            for(var sol : this.individuals){
+                partialSum += sol.calculateFitness();
+                if(partialSum <= rand){
+                    return sol;
+                }
             }
         }
-        return new Solution(1,1);
+
     }
 
     private Solution chooseRandomSolution() {

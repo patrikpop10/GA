@@ -14,7 +14,13 @@ public class GAService extends javafx.concurrent.Service<GA> {
         return new Task<GA>() {
             @Override
             protected GA call() throws Exception {
-                ga.run();
+                try{
+                    ga.run();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 return null;
             }
         };

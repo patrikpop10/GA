@@ -90,32 +90,36 @@ public class Solution extends Image implements ISolution {
 	 *
 	 */
 
-
+		//TODO: be able to remove shapes
 	public Solution mutation() {
+		try{
+			Solution s = new Solution(super.getWidth(), super.getHeight());
+			s.setShapes(super.getShapes());
+			for(int i = 0; i < super.getShapes().size() - 1 ;i++) {
+				if (Math.random() < Parameters.mutationRate) {
+					s.getShapes().set(i, new Shape(new Random().nextInt(0, Parameters.imageSize),
+							new Random().nextInt(0, Parameters.imageSize),
+							new Random().nextInt(0, Parameters.imageSize),
+							new Random().nextInt(0, Parameters.imageSize),
+							new Random().nextInt(0, Parameters.imageSize),
+							new Random().nextInt(0, Parameters.imageSize),
+							new Color((int) (Math.random() * 0x1000000))));
+				}
+				else {
+					s.getShapes().set(i,this.getShapes().get(i));
+				}
 
-		Solution s = new Solution(super.getWidth(), super.getHeight());
-		for(int i = 0; i < super.getShapes().size();i++) {
-			if (Math.random() < Parameters.mutationRate) {
-				s.getShapes().set(i, new Shape(new Random().nextInt(0, Parameters.imageSize),
-						new Random().nextInt(0, Parameters.imageSize),
-						new Random().nextInt(0, Parameters.imageSize),
-						new Random().nextInt(0, Parameters.imageSize),
-						new Random().nextInt(0, Parameters.imageSize),
-						new Random().nextInt(0, Parameters.imageSize),
-						new Color((int) (Math.random() * 0x1000000))));
+			}// ends the for
+			s.draw();
+			s.setColors(ImageUtils.getColorsList(s.getImg(), Parameters.imageSize, Parameters.imageSize));
+			s.alreadyCalculated = false;
+			s.fitness = -1;
+			return s;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 
-			}
-			else {
-				s.getShapes().set(i,this.getShapes().get(i));
-
-			}
-
-		}// ends the for
-		s.draw();
-		s.setColors(ImageUtils.getColorsList(s.getImg(), Parameters.imageSize, Parameters.imageSize));
-		s.alreadyCalculated = false;
-		s.fitness = -1;
-		return s;
 
 	}// ends method mutation
 
@@ -129,9 +133,7 @@ public class Solution extends Image implements ISolution {
 	 */
 	public String printSolution() {
 		StringBuilder stringBuilder = new StringBuilder();
-		for (var color : this.getColors()) {
-			System.out.print(color + ", ");
-		}
+
 		System.out.println ("          " + calculateFitness());
 		stringBuilder.append("          " + calculateFitness() +"\n");
 		return stringBuilder.toString();
@@ -154,28 +156,22 @@ public class Solution extends Image implements ISolution {
 
 			double res= 0.0;
 			ArrayList<Double> values = new ArrayList<>();
-			try{
-				IntStream.range(0, this.getColors().size())
-						.parallel()
-						.forEach(i -> {
-							values.add(calcPixelDistance(i));
-						});
+
+			try {
+				for (int i = 0; i < this.getColors().size(); i++) {
+					values.add(calcPixelDistance(i));
+				}
 				res = values.stream().mapToDouble(i -> i.doubleValue()).sum();
-			}
-			catch (Exception e){
+				alreadyCalculated = true;
+				fitness = res;
+				return fitness;
+
+			}catch (Exception e){
 				e.printStackTrace();
 			}
-
-			/*
-				for (int i = 0; i< this.getColors().size(); i++) {
-				values.add(calcPixelDistance(i));
-			}
-			 */
-
-
-
-			alreadyCalculated = true;
-			fitness = res;
+		}
+		else{
+			return fitness;
 		}
 
 		return fitness;
@@ -186,13 +182,13 @@ public class Solution extends Image implements ISolution {
 	private double calcSpecificColorDif(Image baseImage, Colors color, int index){
 		switch (color){
 			case Red -> {
-				return Math.abs(this.getColors().get(index).getRed() - baseImage.getColors().get(index).getRed())/255.0;
+				return Math.pow(this.getColors().get(index).getRed() - baseImage.getColors().get(index).getRed(),2);
 			}
 			case Green ->{
-				return  Math.abs(this.getColors().get(index).getGreen() - baseImage.getColors().get(index).getGreen())/255.0;
+				return  Math.pow(this.getColors().get(index).getGreen() - baseImage.getColors().get(index).getGreen(),2);
 			}
 			case Blue ->{
-				return Math.abs(this.getColors().get(index).getBlue() - baseImage.getColors().get(index).getBlue())/255.0;
+				return Math.pow(this.getColors().get(index).getBlue() - baseImage.getColors().get(index).getBlue(),2);
 			}
 
 		}
@@ -202,7 +198,7 @@ public class Solution extends Image implements ISolution {
 		double redDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Red, index);
 		double greenDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Green, index);
 		double blueDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Blue, index);
-		return redDif + greenDif + blueDif;
+		return (redDif + greenDif + blueDif)/(3.0* Parameters.imageSize * Parameters.imageSize);
 	}
 
 

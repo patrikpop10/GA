@@ -9,6 +9,7 @@ module patrik.ga {
     requires org.kordamp.bootstrapfx.core;
     requires java.desktop;
     requires javafx.swing;
+    requires org.apache.commons.lang3;
     opens patrik.ga to javafx.fxml;
     exports patrik.ga;
 }
