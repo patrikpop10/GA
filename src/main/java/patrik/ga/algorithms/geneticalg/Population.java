@@ -44,7 +44,6 @@ public class Population {
         Solution current = chooseRandomSolution();
         Solution best = current;
 
-
         for (int i = 1; i <Parameters.tournamentSize ; i++) {
            current = chooseRandomSolution();
 
@@ -78,8 +77,6 @@ public class Population {
 
         return individuals[randomIndex];
     }
-
-
 
 
 

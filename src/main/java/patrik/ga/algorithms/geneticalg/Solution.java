@@ -99,7 +99,6 @@ public class Solution extends Image implements ISolution {
 				s.getColors().set(i, new Color((int) (Math.random() * 0x1000000)));
 			else {
 				s.getColors().set(i,this.getColors().get(i));
-
 			}
 		}// ends the for
 
@@ -153,13 +152,13 @@ public class Solution extends Image implements ISolution {
 			}
 				res = values.stream().mapToDouble(i -> i.doubleValue()).sum();
 
-
+				alreadyCalculated = true;
+				fitness = res;
 			}
 			catch(Exception e ){
 				e.printStackTrace();
 			}
-			alreadyCalculated = true;
-			fitness = res;
+
 		}
 
 		return fitness;
@@ -168,13 +167,13 @@ public class Solution extends Image implements ISolution {
 	private double calcSpecificColorDif(Image baseImage, Colors color, int index){
 		switch (color){
 			case Red -> {
-				return Math.abs(this.getColors().get(index).getRed() - baseImage.getColors().get(index).getRed())/255.0;
+				return Math.pow(this.getColors().get(index).getRed() - baseImage.getColors().get(index).getRed(), 2);
 			}
 			case Green ->{
-				return  Math.abs(this.getColors().get(index).getGreen() - baseImage.getColors().get(index).getGreen())/255.0;
+				return  Math.pow(this.getColors().get(index).getGreen() - baseImage.getColors().get(index).getGreen(),2);
 			}
 			case Blue ->{
-				return Math.abs(this.getColors().get(index).getBlue() - baseImage.getColors().get(index).getBlue())/255.0;
+				return Math.pow(this.getColors().get(index).getBlue() - baseImage.getColors().get(index).getBlue(),2);
 			}
 
 		}
@@ -184,7 +183,7 @@ public class Solution extends Image implements ISolution {
 		double redDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Red, index);
 		double greenDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Green, index);
 		double blueDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Blue, index);
-		return redDif + greenDif + blueDif;
+		return (redDif + greenDif + blueDif) / (3 * Parameters.imageSize * Parameters.imageSize);
 	}
 
 

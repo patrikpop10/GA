@@ -90,7 +90,7 @@ public class GA implements IAlgorithms {
             best = pop.bestOfPop();
 
             if(gen % 100 == 0 || gen == 1){
-
+                Thread.sleep(1000);
                 System.out.println("Changing Image");
                 Thread.sleep(1500);
                 BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
