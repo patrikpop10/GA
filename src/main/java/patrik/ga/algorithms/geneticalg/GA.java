@@ -65,9 +65,9 @@ public class GA implements IAlgorithms {
 
 
                     Solution dad = pop.selection();
-                    pop.individuals = ArrayUtils.removeElement(pop.individuals,dad);
+                    //pop.individuals = ArrayUtils.removeElement(pop.individuals,dad);
                     Solution mom = pop.selection();
-                    pop.individuals = ArrayUtils.removeElement(pop.individuals, mom);
+                    //pop.individuals = ArrayUtils.removeElement(pop.individuals, mom);
 
                     Solution child1 = new Solution(dad.getWidth(), dad.getHeight());
                     Solution child2 = new Solution(dad.getWidth(), dad.getHeight());
@@ -95,7 +95,7 @@ public class GA implements IAlgorithms {
             pop = newPop;
             best = pop.bestOfPop();
 
-            if(gen % 100 == 0 || gen == 1){
+            if(gen % 20 == 0 || gen == 1){
                 BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);
                 int[] arr = best.getColors().stream().mapToInt(i -> i.getRGB()).toArray();
                 bufferedImage.setRGB(0,0,(int) best.getWidth(),(int) best.getHeight(), arr, 0,(int) best.getWidth());
@@ -111,34 +111,24 @@ public class GA implements IAlgorithms {
     }  // terminates the main method
 
     //crossover
-    //TODO: CHANGE FOR A MORE RANDOM APPROACH
 
     private static void crossover(Solution father, Solution mother, Solution child1, Solution child2){
         var genePool =  Stream.concat(father.getShapes().stream(), mother.getShapes().stream()).collect(Collectors.toList());
         Collections.shuffle(genePool);
         var childOneGenes = new ArrayList<patrik.ga.util.image.Shape>();
         var childTwoGenes = new ArrayList<patrik.ga.util.image.Shape>();
-        int randomIndex = (int) (new Random().nextDouble(0,1) *(genePool.size() -1));
 
-       while(randomIndex == 0 )
-       {
+        for (int i = 0; i <=genePool.size() -1 ; i++) {
+            if(i < genePool.size()/2){
+                childOneGenes.add(genePool.get(i));
 
-           randomIndex = (int) (new Random().nextDouble(0.1,1) *(genePool.size() -1));
-       }
-        for (int i = 0; i <=randomIndex ; i++) {
-
-           childOneGenes.add(genePool.get(i));
-
-        }
-
-        for (int i = randomIndex+1; i < genePool.size()  ; i++) {
-            childTwoGenes.add(genePool.get(i));
+            }
+            else {
+                childTwoGenes.add(genePool.get(i));
+            }
 
         }
-        if(childOneGenes.size() == 0 || childTwoGenes.size() == 0)
-        {
-            System.out.println("here");
-        }
+
         child1.setShapes(childOneGenes);
         child2.setShapes(childTwoGenes);
 

@@ -54,7 +54,6 @@ public class Solution extends Image implements ISolution {
 	private double fitness;
 
 
-
 	/*
 	 *   Methods
 	 */
@@ -81,7 +80,6 @@ public class Solution extends Image implements ISolution {
 
 	} //ends method myClone
 
-
 	/*
 	 *
 	 * mutation
@@ -90,20 +88,26 @@ public class Solution extends Image implements ISolution {
 	 *
 	 */
 
-		//TODO: be able to remove shapes
+
 	public Solution mutation() {
 		try{
 			Solution s = new Solution(super.getWidth(), super.getHeight());
 			s.setShapes(super.getShapes());
 			for(int i = 0; i < super.getShapes().size() - 1 ;i++) {
 				if (Math.random() < Parameters.mutationRate) {
+
+					var rand = new Random();
+					int r = rand.nextInt(255);
+					int g = rand.nextInt(255);
+					int b = rand.nextInt(255);
+					int a = rand.nextInt(50,80);
 					s.getShapes().set(i, new Shape(new Random().nextInt(0, Parameters.imageSize),
-							new Random().nextInt(0, Parameters.imageSize),
-							new Random().nextInt(0, Parameters.imageSize),
-							new Random().nextInt(0, Parameters.imageSize),
-							new Random().nextInt(0, Parameters.imageSize),
-							new Random().nextInt(0, Parameters.imageSize),
-							new Color((int) (Math.random() * 0x1000000))));
+													new Random().nextInt(0, Parameters.imageSize),
+													new Random().nextInt(0, Parameters.maxCircleSize),
+													new Random().nextInt(0, Parameters.maxCircleSize),
+													new Random().nextInt(0, Parameters.imageSize),
+													new Random().nextInt(0, Parameters.imageSize),
+													new Color(r,g,b,a)));
 				}
 				else {
 					s.getShapes().set(i,this.getShapes().get(i));

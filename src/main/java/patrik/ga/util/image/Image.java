@@ -58,12 +58,11 @@ public class Image {
         g.setColor(Color.WHITE);
         g.setBackground(Color.WHITE);
         g.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
-
         for (var shape : shapes) {
             //drawing the circle
             g.setColor(shape.getColor());
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g.fillOval(shape.getX(), shape.getY(), shape.getWidth(), shape.getWidth());
+            g.fillRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getWidth());
         }
 
         return bufferedImage;
@@ -88,7 +87,6 @@ public class Image {
 
     public void generateShapes(){
         shapes = new ArrayList<Shape>();
-        int numberOfCircles = (int) (new Random().nextDouble(0,1) *(Parameters.numberOfCircles -1));
         for (int i = 0; i < Parameters.numberOfCircles; i++) {
             Random rand = new Random();
             int r = rand.nextInt(255);
@@ -100,8 +98,8 @@ public class Image {
             shapes.add(new Shape(new Random().nextInt(0, Parameters.imageSize),
                     new Random().nextInt(0,Parameters.imageSize),
                     new Random().nextInt(0, Parameters.maxCircleSize),
-                    new Random().nextInt(0,Parameters.imageSize/10),
-                    new Random().nextInt(0,Parameters.imageSize/10),
+                    new Random().nextInt(0,Parameters.maxCircleSize),
+                    new Random().nextInt(0,Parameters.maxCircleSize),
                     new Random( ).nextInt(0, Parameters.imageSize/10),
                     color));
         }
