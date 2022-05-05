@@ -47,7 +47,10 @@ public class GA implements IAlgorithms {
                 if(currentNumberOfIndividuals == 0){
                     newPop.individuals[currentNumberOfIndividuals] = best.myClone();
                     currentNumberOfIndividuals++;
-
+                    newPop.individuals[currentNumberOfIndividuals] = Arrays.stream(pop.individuals).sorted(Comparator.comparingDouble(Solution::calculateFitness).reversed()).limit(2).skip(1).findFirst().get();
+                    currentNumberOfIndividuals++;
+                    newPop.individuals[currentNumberOfIndividuals] = Arrays.stream(pop.individuals).sorted(Comparator.comparingDouble(Solution::calculateFitness).reversed()).limit(3).skip(2).findFirst().get();
+                    currentNumberOfIndividuals++;
 
                     if(Parameters.populationSize % 2 == 0){
                         Solution s = pop.selection();

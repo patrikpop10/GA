@@ -167,7 +167,7 @@ public class Solution extends Image implements ISolution {
 				}
 				res = values.stream().mapToDouble(i -> i.doubleValue()).sum();
 				alreadyCalculated = true;
-				fitness = res;
+				fitness = res / Parameters.imageSize * Parameters.imageSize;
 				return fitness;
 
 			}catch (Exception e){
@@ -202,7 +202,7 @@ public class Solution extends Image implements ISolution {
 		double redDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Red, index);
 		double greenDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Green, index);
 		double blueDif = calcSpecificColorDif(Parameters.BaseImage, Colors.Blue, index);
-		return (redDif + greenDif + blueDif)/(3.0* Parameters.imageSize * Parameters.imageSize);
+		return (redDif + greenDif + blueDif)/3.0;
 	}
 
 

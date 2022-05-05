@@ -64,7 +64,6 @@ public class Image {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.fillRect(shape.getX(), shape.getY(), shape.getWidth(), shape.getWidth());
         }
-
         return bufferedImage;
 
     }
