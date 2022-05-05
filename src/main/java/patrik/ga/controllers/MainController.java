@@ -55,7 +55,7 @@ public class MainController {
     static ObservableList<String> options = FXCollections.observableArrayList(
             "Simulated Annealing", "Genetic Algorithm"
     );
-    static ComboBox selectAlgorithm = new ComboBox(options);
+
 
 
     public static void control(){
@@ -140,7 +140,7 @@ public class MainController {
 
                 wi = new WritableImage(Parameters.imageSize, Parameters.imageSize);
                 try {
-                    wi = new WritableImage(new Image(new FileInputStream(file)).getPixelReader(), 500, 500);
+                    wi = new WritableImage(new Image(new FileInputStream(file)).getPixelReader(),200,150);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -151,6 +151,7 @@ public class MainController {
 
                patrik.ga.util.image.Image image = reader.BuildImageFromFile(Parameters.imageSize, Parameters.imageSize);
                Parameters.BaseImage = image;
+               imageView = new ImageView(image);
             }
         });
     }

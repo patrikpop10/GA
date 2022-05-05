@@ -8,9 +8,7 @@ import patrik.ga.algorithms.interfaces.IAlgorithms;
 import patrik.ga.controllers.MainController;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class GA implements IAlgorithms {
     /*---------------------------------------------------------------
@@ -46,6 +44,10 @@ public class GA implements IAlgorithms {
                     newPop.individuals[currentNumberOfIndividuals] = best.myClone();
                     currentNumberOfIndividuals++;
 
+                    newPop.individuals[currentNumberOfIndividuals] = Arrays.stream(pop.individuals).sorted(Comparator.comparingDouble(Solution::calculateFitness).reversed()).limit(2).skip(1).findFirst().get();
+                    currentNumberOfIndividuals++;
+                    newPop.individuals[currentNumberOfIndividuals] = Arrays.stream(pop.individuals).sorted(Comparator.comparingDouble(Solution::calculateFitness).reversed()).limit(3).skip(2).findFirst().get();
+                    currentNumberOfIndividuals++;
 
                     if(Parameters.populationSize % 2 == 0){
                         Solution s = pop.selection();
@@ -88,9 +90,7 @@ public class GA implements IAlgorithms {
             }//ends for
             pop = newPop;
             best = pop.bestOfPop();
-
             if(gen % 100 == 0 || gen == 1){
-                Thread.sleep(1000);
                 System.out.println("Changing Image");
                 Thread.sleep(1500);
                 BufferedImage bufferedImage = new BufferedImage((int) best.getWidth(), (int) best.getHeight(), BufferedImage.TYPE_INT_RGB);

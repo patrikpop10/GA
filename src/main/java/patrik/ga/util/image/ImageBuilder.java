@@ -17,7 +17,8 @@ public class ImageBuilder {
     public Image BuildImageFromFile(int newW, int newH){
         Image image = null;
         try(InputStream is = new FileInputStream(this.file)) {
-            BufferedImage bi = ImageIO.read(is); // Use ImageIO to create a BufferedImage
+
+            BufferedImage bi = ImageIO.read(is);
             bi = resize(bi, newW, newH);
             int w = bi.getWidth();
             int h = bi.getHeight();
@@ -26,7 +27,7 @@ public class ImageBuilder {
             ArrayList<Color> colors = new ArrayList<>();
             for(int i = 0; i < h; i++) {
                 for(int j = 0; j < w; j++) {
-                    Color myColor = new Color(bi.getRGB(j, i)); // bi.getRGB returns an integer like -14350844, representing the specific color. use Color class to get the individual colors with: myColor.getBlue()...
+                    Color myColor = new Color(bi.getRGB(j, i));
                     colors.add(myColor);
                 }
             }
