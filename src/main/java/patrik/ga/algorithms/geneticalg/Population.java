@@ -1,8 +1,11 @@
 package patrik.ga.algorithms.geneticalg;
 
 import patrik.ga.Parameters;
+import patrik.ga.algorithms.interfaces.ISelection;
 import patrik.ga.util.Maximization;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -26,56 +29,16 @@ public class Population {
 
 
     }
-
-
+    public Solution GetNthSolution(int solNumber){
+        return Arrays.stream(this.individuals).sorted(Comparator.comparingDouble(Solution::calculateFitness).reversed()).limit(solNumber).skip(solNumber - 1).findFirst().get();
+    }
 
 
     // selection
 
+    public Solution selection(ISelection selectionAlg){
 
-    public Solution selection(){
-
-        return proportionalSelection();
-    }
-
-
-    public Solution tournamentSelection(){
-
-        Solution current = chooseRandomSolution();
-        Solution best = current;
-
-        for (int i = 1; i <Parameters.tournamentSize ; i++) {
-           current = chooseRandomSolution();
-
-           if(Maximization.better(current.calculateFitness(), best.calculateFitness())){
-               best = current;
-           }
-        }
-
-        return best.myClone();
-
-    }
-    public Solution proportionalSelection(){
-        double total = 0;
-        for (var sol: this.individuals) {
-            total += sol.calculateFitness();
-        }
-        double rand = new Random().nextDouble(0, total);
-        double partialSum = 0.0;
-        for(var sol : this.individuals){
-            partialSum += sol.calculateFitness();
-            if(partialSum <= rand){
-                return sol;
-            }
-        }
-        return new Solution(1,1);
-    }
-
-    private Solution chooseRandomSolution() {
-
-        int randomIndex = (int) (Math.random() * Parameters.populationSize);
-
-        return individuals[randomIndex];
+        return selectionAlg.select(this.individuals);
     }
 
 

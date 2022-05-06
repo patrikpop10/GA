@@ -10,7 +10,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ImageBuilder {
-    public File file;
+    private  File file;
+    private BufferedImage bi;
     public ImageBuilder(File file){
         this.file = file;
     }
@@ -18,16 +19,16 @@ public class ImageBuilder {
         Image image = null;
         try(InputStream is = new FileInputStream(this.file)) {
 
-            BufferedImage bi = ImageIO.read(is);
-            bi = resize(bi, newW, newH);
-            int w = bi.getWidth();
-            int h = bi.getHeight();
+            setBi(ImageIO.read(is));
+            setBi(resize(getBi(), newW, newH));
+            int w = getBi().getWidth();
+            int h = getBi().getHeight();
             image = new Image(w,h);
 
             ArrayList<Color> colors = new ArrayList<>();
             for(int i = 0; i < h; i++) {
                 for(int j = 0; j < w; j++) {
-                    Color myColor = new Color(bi.getRGB(j, i));
+                    Color myColor = new Color(getBi().getRGB(j, i));
                     colors.add(myColor);
                 }
             }
@@ -49,4 +50,11 @@ public class ImageBuilder {
         return dimg;
     }
 
+    public BufferedImage getBi() {
+        return bi;
+    }
+
+    public void setBi(BufferedImage bi) {
+        this.bi = bi;
+    }
 }

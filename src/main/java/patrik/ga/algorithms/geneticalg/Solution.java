@@ -31,7 +31,7 @@ public class Solution extends Image implements ISolution {
 		alreadyCalculated = false;
 		fitness = -1;
 	}
-	Solution(double width, double height) {
+	public Solution(double width, double height) {
 		super(width, height);
 		for(int i = 0; i < Parameters.BaseImage.getColors().size(); i++){
 			this.getColors().add(i, new Color((int)(Math.random() * 0x1000000)));
@@ -94,12 +94,14 @@ public class Solution extends Image implements ISolution {
 	public Solution mutation() {
 
 		Solution s = new Solution(super.getWidth(), super.getHeight());
-		for(int i = 0; i < super.getColors().size();i++) {
+		int i = 0;
+		for(var color :super.getColors()) {
 			if (Math.random() < Parameters.mutationRate)
 				s.getColors().set(i, new Color((int) (Math.random() * 0x1000000)));
 			else {
-				s.getColors().set(i,this.getColors().get(i));
+				s.getColors().set(i,color);
 			}
+			i++;
 		}// ends the for
 
 

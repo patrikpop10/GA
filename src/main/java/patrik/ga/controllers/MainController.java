@@ -37,9 +37,8 @@ public class MainController {
     static Button button;
     static Button openFileChooser;
     static Text text;
-    public static StackPane bottomPane;
+    public static HBox bottomPane;
     public static BorderPane borderPane;
-    public static TextArea textArea;
     public static MenuBar menuBar;
     static FileChooser fileChooser;
     static HBox pane;
@@ -48,7 +47,6 @@ public class MainController {
     static MenuItem properties;
     static MenuItem statisticalSimulation;
     public static ImageView imageView;
-    private static Desktop desktop = Desktop.getDesktop();
     public static WritableImage wi;
     public static Canvas canvas;
     public static GraphicsContext context;
@@ -85,15 +83,10 @@ public class MainController {
         fileChooser = new FileChooser();
         pane.getChildren().addAll(button, openFileChooser);
         pane.setPadding(new Insets(100,100,100,100));
-        bottomPane = new StackPane();
-        Image image = new Image(new FileInputStream("C:\\Users\\User\\Pictures\\Sem Título.png"));
-        imageView = new ImageView(image);
-        imageView.setFitHeight(250);
-        imageView.setFitWidth(250);
-        text = new Text("Simulated Annealing or Genetic Algorithm");
+        bottomPane = new HBox();
         canvas = new Canvas(300,300);
         context = canvas.getGraphicsContext2D();
-        bottomPane.getChildren().addAll(imageView, text, canvas);
+        bottomPane.getChildren().addAll(canvas);
         bottomPane.setPadding(new Insets(100,50,50,50));
         bottomPane.setAlignment(Pos.CENTER);
 
@@ -151,7 +144,10 @@ public class MainController {
 
                patrik.ga.util.image.Image image = reader.BuildImageFromFile(Parameters.imageSize, Parameters.imageSize);
                Parameters.BaseImage = image;
-               imageView = new ImageView(image);
+               imageView = new ImageView(wi);
+               imageView.setFitHeight(Parameters.imageSize + 10);
+               imageView.setFitWidth(Parameters.imageSize + 10);
+               bottomPane.getChildren().add(0,imageView);
             }
         });
     }
@@ -161,7 +157,6 @@ public class MainController {
     public static void runAlgorithm(){
 
         button.setOnAction(actionEvent -> {
-            MainController.bottomPane.getChildren().remove(MainController.imageView);
             new GAService(new GA()).start();
         });
     }
